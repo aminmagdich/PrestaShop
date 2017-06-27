@@ -114,6 +114,7 @@ class ManufacturerCore extends ObjectModel
 
         $this->link_rewrite = $this->getLink();
         $this->image_dir = _PS_MANU_IMG_DIR_;
+        $this->id_address   = Manufacturer::getManufacturerAddress();
     }
 
     /**
