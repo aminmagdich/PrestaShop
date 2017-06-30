@@ -836,7 +836,7 @@ var warehouseCombinations = (function() {
 var form = (function() {
   var elem = $('#form');
 
-  function send(redirect, target) {
+  function send(redirect, target,callBack) {
     // target value by default
     if (typeof(target) == 'undefined') {
       target = false;
@@ -849,9 +849,9 @@ var form = (function() {
     if (target == '_blank' && redirect) {
       var openBlank = window.open('about:blank', target, '');
       openBlank.document.write(
-        '<p style="text-align: center;">' +
-        '<img src="' + document.location.origin + baseAdminDir + '/themes/default/img/spinner.gif">' +
-        '</p>'
+          '<p style="text-align: center;">' +
+          '<img src="' + document.location.origin + baseAdminDir + '/themes/default/img/spinner.gif">' +
+          '</p>'
       );
     }
 
@@ -866,11 +866,14 @@ var form = (function() {
         $('#form-nav li.has-error').removeClass('has-error');
       },
       success: function(response) {
+        if(callBack){
+          callBack();
+        }
         showSuccessMessage(translate_javascripts['Form update success']);
         //update the customization ids
         if (typeof response.customization_fields_ids != "undefined") {
           $.each(response.customization_fields_ids, function (k, v) {
-              $("#form_step6_custom_fields_" + k + "_id_customization_field").val(v);
+            $("#form_step6_custom_fields_" + k + "_id_customization_field").val(v);
           });
         }
 
@@ -924,10 +927,10 @@ var form = (function() {
         tabsWithErrors.sort();
         $.each(tabsWithErrors, function(key, tabIndex) {
           if (0 === key) {
-            $('#form-nav li a[href="#' + tabIndex.split('_')[0] + '"]').tab('show');
+            $('#form-nav li a[color: rgb(7, 154, 113);">+ tabIndex.split('_')[0] + '"]').tab('show');
           }
 
-          $('#form-nav li a[href="#' + tabIndex.split('_')[0] + '"]').parent().addClass('has-error');
+          $('#form-nav li a[color: rgb(7, 154, 113);">+ tabIndex.split('_')[0] + '"]').parent().addClass('has-error');
         });
 
         if ($('div[class*="translation-label-"].has-danger').length > 0) {
@@ -1138,8 +1141,8 @@ var form = (function() {
         imagesProduct.initExpander();
       });
     },
-    'send': function() {
-      send();
+    'send': function(redirect, target,callBack) {
+      send(redirect, target,callBack);
     },
     'switchLanguage': function(iso_code) {
       switchLanguage(iso_code);

@@ -15,15 +15,15 @@ export default function() {
     let refreshImagesUrl = $jsCombinationsList.attr('data-action-refresh-images').replace(/product-form-images\/\d+/, 'product-form-images/' + $jsCombinationsList.data('id-product'));
 
     $.get(refreshImagesUrl)
-      .then(function(response) {
-        if (idsProductAttribute[0] != '') {
-          getCombinations(response);
-        }
-        $('#create-combinations').click(function(event) {
-          event.preventDefault();
-          generate();
+        .then(function(response) {
+          if (idsProductAttribute[0] != '') {
+            getCombinations(response);
+          }
+          $('#create-combinations').click(function(event) {
+            event.preventDefault();
+            form.send(false,false,generate);
+          });
         });
-      });
 
     let productDropzone = Dropzone.forElement('#product-images-dropzone');
     let updateCombinationImages = function () {
