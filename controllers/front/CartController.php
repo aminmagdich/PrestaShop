@@ -155,7 +155,7 @@ class CartControllerCore extends FrontController
                 false,
                 false,
                 true,
-                ['quantity_wanted' => (int)$this->qty]
+                ['quantity_wanted' => (int)$this->qty+$this->getQuantityProductInCart()]
             );
         } else {
             $url = false;
@@ -297,7 +297,7 @@ class CartControllerCore extends FrontController
             }
         }
 
-        $qty_to_check = $this->qty;
+        $qty_to_check = $this->qty+$this->getQuantityProductInCart();
         $cart_products = $this->context->cart->getProducts();
 
         if (is_array($cart_products)) {
@@ -375,6 +375,31 @@ class CartControllerCore extends FrontController
                 $productInCart['id_customization'] == $this->customization_id
             )
         ) && isset($this->id_product) && $productInCart['id_product'] == $this->id_product;
+    }
+
+    /**
+     * @return int
+     */
+    public function getQuantityProductInCart()
+    {
+        $cart_products = $this->context->cart->getProducts();
+        $qty_to_check=0;
+        if (is_array($cart_products)) {
+            foreach ( $cart_products as $cart_product ) {
+                print_r($cart_product);
+                // the same condition of function productInCartMatchesCriteria but without customization_id
+                if((
+                    !isset($this->id_product_attribute) ||
+                    ($cart_product['id_product_attribute'] == $this->id_product_attribute )) &&
+                  isset($this->id_product) && $cart_product['id_product'] == $this->id_product) {
+                    $qty_to_check += $cart_product['cart_quantity'];
+
+                    print_r($cart_product);
+                }
+            }
+        }
+
+        return $qty_to_check;
     }
 
     public function getTemplateVarPage()
